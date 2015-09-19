@@ -1,3 +1,9 @@
+app/cache/
+app/log/
+vendor/
+.idea/
+composer.phar
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
