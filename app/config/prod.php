@@ -4,10 +4,6 @@
 
 $app['cache.path'] = __DIR__ . '/../cache';
 
-// Cache HTTP
-$app->register(new Silex\Provider\HttpCacheServiceProvider());
-$app['http_cache.cache_dir'] = $app['cache.path'] . '/http';
-
 // Cache TWIG templates.
 $app['twig.options'] = [
     'cache' => $app['cache.path'] . '/twig',
