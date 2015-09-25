@@ -1,12 +1,11 @@
 app/cache/
 app/log/
-src/MyApp/Resources/assets/scss/style.scss
 node_modules/
 vendor/
 web/css
 web/fonts/
 web/js/*
-!web/js/*/vendor/
+!web/js/*/
 web/img/
 .idea/
 composer.phar

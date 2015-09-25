@@ -1,105 +1,91 @@
 module.exports = function(grunt) {
 
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-
+    require('time-grunt')(grunt);
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
+        bootstrapSrc: 'node_modules/bootstrap/dist/',
+        web: 'web/',
+        appAssets: 'src/MyApp/Resources/assets/',
+
         copy: {
-            bootstrapfonts: {
+            bootstrapFonts: {
                 expand: true,
-                cwd: 'node_modules/bootstrap/dist/fonts',
+                cwd: '<%= bootstrapSrc %>fonts',
                 src: '*',
-                dest: 'web/fonts'
+                dest: '<%= web %>fonts'
             },
-            bootstrapjs: {
+            bootstrapJs: {
                 expand: true,
-                cwd: 'node_modules/bootstrap/dist/js',
+                cwd: '<%= bootstrapSrc %>js',
                 src: 'bootstrap.min.js',
-                dest: 'web/js/vendor'
+                dest: '<%= web %>js'
             },
             images: {
                 expand: true,
-                cwd: 'src/MyApp/Resources/assets/img',
+                cwd: '<%= appAssets %>img',
                 src: '**',
-                dest: 'web/img'
+                dest: '<%= web %>img'
             }
         },
         concat: {
-            bootstrapcss: {
+            bootstrapCss: {
                 options: {
-                    sourceMap: true
+                    sourceMap: true,
+                    separator: '\n\n'
                 },
                 src: [
-                    'node_modules/bootstrap/dist/css/bootstrap.min.css',
-                    'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
+                    '<%= bootstrapSrc %>css/bootstrap.min.css',
+                    '<%= bootstrapSrc %>css/bootstrap-theme.min.css'
                 ],
-                dest: 'web/css/bootstrap.css'
+                dest: '<%= web %>css/bootstrap.css'
             },
-            concatscss: {
-                src: [
-                    'src/MyApp/Resources/assets/scss/*.scss',
-                    '!src/MyApp/Resources/assets/scss/style.scss'
-                ],
-                dest:'src/MyApp/Resources/assets/scss/style.scss'
-            },
-            concatjs: {
-                src: [
-                    'src/MyApp/Resources/assets/js/*.js'
-                ],
-                dest:'web/js/main.js'
+            concatJs: {
+                options: {
+                    separator: '\n\n'
+                },
+                src: '<%= appAssets %>js/*.js',
+                dest:'<%= web %>js/main.js'
             }
         },
         sass: {
             css: {
                 options: {
-                    style: 'expanded',
-                    sourcemap: 'inline',
-                    trace: true
+                    style: 'compressed'
                 },
-                src: 'src/MyApp/Resources/assets/scss/style.scss',
-                dest:'web/css/style.css'
+                src: '<%= appAssets %>scss/style.scss',
+                dest:'<%= web %>css/style.css'
             }
         },
         watch: {
             css: {
-                files: ['src/MyApp/Resources/assets/scss/*.scss'],
-                tasks: ['concatscss','scsstocss']
+                files: ['<%= appAssets %>scss/*.scss'],
+                tasks: ['sass:css']
             },
             js: {
-                files: ['src/MyApp/Resources/assets/js/*.js'],
-                tasks: ['concatjs']
+                files: ['<%= appAssets %>js/*.js'],
+                tasks: ['concat:concatJs']
+            },
+            src: {
+                files: [
+                    '<%= appAssets %>scss/*.scss',
+                    '<%= appAssets %>js/*.js'
+                ],
+                tasks: ['sass:css', 'concat:concatJs']
             }
         }
     });
 
-    grunt.registerTask('bootstrapfonts', ['copy:bootstrapfonts']);
-    grunt.registerTask('bootstrapjs', ['copy:bootstrapjs']);
-    grunt.registerTask('copyimages', ['copy:images']);
+    grunt.registerTask('copyimages', 'Copy App images to web dir', ['copy:images']);
+    grunt.registerTask('copyjs', 'Copy App js to web dir', ['concat:concatJs']);
+    grunt.registerTask('copycss', 'Copy App css to web dir', ['sass:css']);
 
-    grunt.registerTask('bootstrapcss', ['concat:bootstrapcss']);
-    grunt.registerTask('concatscss', ['concat:concatscss']);
-    grunt.registerTask('concatjs', ['concat:concatjs']);
+    grunt.registerTask('csswatch', ['watch:css']);
+    grunt.registerTask('jswatch', ['watch:js']);
+    grunt.registerTask('watchall', ['watch:src']);
 
-    grunt.registerTask('scsstocss', ['sass:css']);
-
-    grunt.registerTask('watchcss', ['watch:css']);
-    grunt.registerTask('watchjs', ['watch:js']);
-    grunt.registerTask('watchall', ['watchcss', 'watchjs']);
-
-    grunt.registerTask('default', ['bootstrapfonts', 'bootstrapjs', 'bootstrapcss', 'concatscss', 'concatjs', 'scsstocss', 'copyimages']);
-
-
-//suoptimaizinti pagal kai pprasyta webe
-
-    //Concat and compile
-    //Instead of concatenating the files, just @import them into another .sass file eg. main.scss.
+    grunt.registerTask('copybootstrap', ['copy:bootstrapFonts', 'copy:bootstrapJs', 'concat:bootstrapCss']);
+    grunt.registerTask('copyassets', 'Copy App assets to web dir', ['copyimages', 'copyjs', 'copycss']);
+    grunt.registerTask('default', ['copybootstrap', 'copyassets']);
 
 };
-
-
-
-
