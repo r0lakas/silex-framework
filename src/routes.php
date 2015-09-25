@@ -5,4 +5,3 @@
 //----------------------------------------------------------
 // ROUTES:
 $app->get('/', 'MyApp\Controller\DefaultController::indexAction');
-$app->get('/cached', 'MyApp\Controller\DefaultController::cachedAction');

@@ -1,6 +1,12 @@
 app/cache/
 app/log/
+node_modules/
 vendor/
+web/css
+web/fonts/
+web/js/*
+!web/js/*/
+web/img/
 .idea/
 composer.phar
 

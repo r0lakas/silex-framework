@@ -24,7 +24,7 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 // https://github.com/Seldaek/monolog/blob/master/doc/01-usage.md
 // Monolog log.
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.logfile' => __DIR__.'/../app/log/development.log',
+    'monolog.logfile' => __DIR__.'/../app/log/errors.log',
     'monolog.name'    => 'app',
     'monolog.level'   => 300 // = Logger::WARNING. Available: "DEBUG", "INFO", "WARNING", "ERROR"
 ));
